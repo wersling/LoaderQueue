@@ -1,0 +1,6 @@
+<project name="loaderqueue" default="deploy" basedir="../">
+    <property environment="env" />
+    <property name="FLEX_HOME" value="${env.FLEX_HOME}"/>
+    <property file="build/build.properties" />
+    <import file="common/tools/build-common.xml"/>
+</project>
