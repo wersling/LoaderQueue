@@ -1,0 +1,25 @@
+h2. LoaderQueue: ActionScript 3多文件加载管理器
+
+在Flash项目中，我们一般都需要加载外部文件：共享库，XML，图片，音乐等等。在多数情况下，我们都希望能够控制这些加载的文件的先后顺序。如在Flash游戏中，我们希望用户先看到地图，然后是可视范围内的人物。有的时候，我们希望先加载XML，能暂停那些不重要的加载(地图缓存数据)，先处理数据发送。
+
+为了解决以上提到的功能需要，我和我的同事Austin一起着手写一个更好用的加载队列。我们暂时取名为：LoaderQueue。在一开始，我们就希望它能支持优先级，多线程和更易用。
+
+h3. 特色:
+
+* 基于接口，方便扩展易于学习
+* 优先级控制，优先级越高越先下载
+* 支持多线程下载，并可调整
+* 支持已经缓存的文件，跳过队列直接加载
+* 支持对单个或多个文件加载进度及情况进行监控
+* 非索引式获取一个加载对象，而是直接获得加载对象实例
+
+ "详细介绍":http://www.wersling.com/?p=629
+
+
+h2. 许可(可免费商用)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
