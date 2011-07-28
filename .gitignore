@@ -1,6 +1,8 @@
 /.project
 /.flexLibProperties
 /.settings
+/.FlexUnitSettings
 /.actionScriptProperties
 /bin
 /src/LoaderQueueClasses.as
+/src/FlexUnitApplication.mxml
