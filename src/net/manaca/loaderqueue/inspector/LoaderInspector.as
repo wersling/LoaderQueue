@@ -16,7 +16,7 @@ import flash.utils.Dictionary;
 
 import net.manaca.loaderqueue.ILoaderAdapter;
 import net.manaca.loaderqueue.ILoaderQueue;
-import net.manaca.loaderqueue.LoaderQueueConst;
+import net.manaca.loaderqueue.LoaderAdapterState;
 import net.manaca.loaderqueue.LoaderQueueEvent;
 
 /**
@@ -242,7 +242,7 @@ public class LoaderInspector extends Sprite
             //判断是否只显示正在加载的对象
             if(onlyButton.selected)
             {
-                if(item.loaderAdapter.state == LoaderQueueConst.STATE_STARTED)
+                if(item.loaderAdapter.state == LoaderAdapterState.STARTED)
                 {
                     items.push(item);
                 }

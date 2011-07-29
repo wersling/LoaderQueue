@@ -6,7 +6,7 @@ package net.manaca.loaderqueue
 import flash.events.IEventDispatcher;
 
 /**
- * 适配器接口类,所有任务适配器需引用此接口
+ * 适配器接口类,所有任务适配器需引用此接口。
  * @see LoaderAdapter
  * @see CommandAdapter
  * @author Austin
@@ -14,23 +14,29 @@ import flash.events.IEventDispatcher;
  */
 public interface ILoaderAdapter extends IEventDispatcher
 {
-    
     /**
-     * A boolean indicating if the instace has started and has not finished loading.
+     * 指示该加载对象是(true)否(false)开始加载。
      * @return
      *
      */
     function get isStarted():Boolean;
     
     /**
-     * The priority level of the loader queue.
+     * 指示该加载对象是(true)否(false)完成加载。
+     * @return 
+     * 
+     */    
+    function get isCompleted():Boolean;
+            
+    /**
+     * 加载优先级。
      * @return
      *
      */
     function get priority():uint;
     
     /**
-     * loading state.
+     * 指示该加载对象的状态。
      * @return 
      * 
      */   
@@ -39,22 +45,21 @@ public interface ILoaderAdapter extends IEventDispatcher
     function set state(value:String):void;
     
     /**
-     * Indicates the number of bytes that have been loaded 
-     * thus far during the load operation.
+     * 已经加载的文件字节数。
      * @return 
      * 
      */    
     function get bytesLoaded():Number;
     
     /**
-     * Indicates the total number of bytes in the downloaded data.
+     * 需要加载的字节总数。
      * @return 
      * 
      */    
     function get bytesTotal():Number;
     
     /**
-     * Custom data.
+     * 用户自定义数据。
      * @return 
      * 
      */    
@@ -62,26 +67,36 @@ public interface ILoaderAdapter extends IEventDispatcher
     function set customData(obj:*):void;
     
     /**
-     * The URL to be requested.
+     * 加载URL地址。
      * @return 
      * 
      */    
     function get url():String;
     
     /**
-     * start loading.
+     * 为url地址添加一个随机数，用于清除缓存。
+     * 也可以通过设置ILoaderQueue.preventAllCache = true来清除所有加载项的缓存。
+     * @see net.manaca.loaderqueue.ILoaderQueue.preventAllCache
+     * @return 
+     * 
+     */    
+    function get preventCache():Boolean;
+    function set preventCache(value:Boolean):void;
+    
+    /**
+     * 开始加载。
      *
      */
     function start():void;
 
     /**
-     * stop loading.
+     * 停止加载。
      *
      */
     function stop():void;
 
     /**
-     * Frees memory that is used to store the ILoaderAdapter object.
+     * GC该对象。
      *
      */
     function dispose():void;

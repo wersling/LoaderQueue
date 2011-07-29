@@ -116,6 +116,11 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
             }
             else
             {
+                if(preventCache)
+                {
+                    backupUrlRequest.url = 
+                        getPreventCacheURL(backupUrlRequest.url);
+                }
                 adaptee.load(backupUrlRequest, loaderContext);
             }
         }

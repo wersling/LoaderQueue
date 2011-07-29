@@ -95,20 +95,25 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
     //==========================================================================
     /**
      * 如果该url文件已经加载过，是否跳过队列直接加载。
-     * 该参数通过加载文件的url来判断。默认为true
+     * 该参数通过加载文件的url来判断。默认为true。
+     * 对ILoaderAdapter.preventCache = true的对象url无效。
+     * @see net.manaca.loaderqueue.ILoaderAdapter.preventCache
      * @default true
      */    
     public var jumpQueueIfCached:Boolean = true;
     
     /**
-     * 最大线程数上限值
+     * 最大线程数上限值。
+     * @default 2
      */
-    public var threadLimit:uint;
+    public var threadLimit:uint = 2;
 
     /**
-     * 等级排序时是否使用倒序(如4,3,2,1)
+     * 等级排序时是否使用倒序(如4,3,2,1)。
+     * @default false
      */
     public var reversePriority:Boolean = false;
+    
     //==========================================================================
     //  Methods
     //==========================================================================
@@ -120,7 +125,6 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
         dispatchEvent(
             new LoaderQueueEvent(LoaderQueueEvent.TASK_ADDED, loaderAdapter));
         
-        loaderAdapter.state = LoaderQueueConst.STATE_WAITING;
         //如果jumpQueueIfCached为true,则检查是否已经加载过，如果加载过，则不添加到队列，
         //而是直接开始加载
         if(jumpQueueIfCached)
@@ -183,7 +187,6 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
     public function removeItem(loaderAdapter:ILoaderAdapter):void
     {
         disposeItem(loaderAdapter);
-        loaderAdapter.state = LoaderQueueConst.STATE_REMOVED;
         dispatchEvent(
             new LoaderQueueEvent(LoaderQueueEvent.TASK_REMOVED, loaderAdapter));
     }
@@ -325,11 +328,10 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
      */
     private function startItem(loaderAdapter:ILoaderAdapter):void
     {
-        loaderAdapter.state = LoaderQueueConst.STATE_STARTED;
         loaderAdapter.addEventListener(LoaderQueueEvent.TASK_COMPLETED,
-                                       loaderAdapter_completedHandler);
+            loaderAdapter_completedHandler, false, 0xFFFFFF, false);
         loaderAdapter.addEventListener(LoaderQueueEvent.TASK_ERROR,
-                                       loaderAdapter_errorHandler);
+            loaderAdapter_errorHandler, false, 0xFFFFFF, false);
         loaderAdapter.start();
     }
 
@@ -339,7 +341,6 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
      */
     private function stopItem(loaderAdapter:ILoaderAdapter):void
     {
-        loaderAdapter.state = LoaderQueueConst.STATE_WAITING;
         loaderAdapter.removeEventListener(LoaderQueueEvent.TASK_COMPLETED,
                                           loaderAdapter_completedHandler);
         loaderAdapter.removeEventListener(LoaderQueueEvent.TASK_ERROR,
@@ -449,9 +450,9 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
     //==========================================================================
     private function loaderAdapter_completedHandler(event:LoaderQueueEvent):void
     {
-        var loaderAdapter:ILoaderAdapter =
-                                          event.currentTarget as ILoaderAdapter;
-        if(jumpQueueIfCached)
+        var loaderAdapter:ILoaderAdapter = 
+            event.currentTarget as ILoaderAdapter;
+        if(jumpQueueIfCached && !loaderAdapter.preventCache)
         {
             cacheMap[loaderAdapter.url] = true;
         }
@@ -466,7 +467,7 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
     private function loaderAdapter_errorHandler(event:LoaderQueueEvent):void
     {
         var loaderAdapter:ILoaderAdapter =
-                                        event.currentTarget as ILoaderAdapter;
+            event.currentTarget as ILoaderAdapter;
         disposeItem(loaderAdapter);
         if (checkQueueHandle())
         {
@@ -513,7 +514,7 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
      */
     private function checkReversePriority(priority1:uint, priority2:uint):Boolean
     {
-        if (!this.reversePriority)
+        if (!reversePriority)
         {
             return priority1 > priority2;
         }

@@ -9,7 +9,7 @@ import flash.text.TextFormat;
 import flash.text.TextFormatAlign;
 
 import net.manaca.loaderqueue.ILoaderAdapter;
-import net.manaca.loaderqueue.LoaderQueueConst;
+import net.manaca.loaderqueue.LoaderAdapterState;
 import net.manaca.loaderqueue.LoaderQueueEvent;
 /**
  * @private
@@ -193,11 +193,11 @@ internal class InspectorItem extends Sprite
             progress = loaderAdapter.bytesLoaded / loaderAdapter.bytesTotal;
         }
         
-        if(loaderAdapter.state == LoaderQueueConst.STATE_COMPLETED)
+        if(loaderAdapter.state == LoaderAdapterState.COMPLETED)
         {
             progress = 1;
         }
-        else if(loaderAdapter.state == LoaderQueueConst.STATE_ERROR)
+        else if(loaderAdapter.state == LoaderAdapterState.ERROR)
         {
             progress = 1;
             barColor = 0xFF0000;

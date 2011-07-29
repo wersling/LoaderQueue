@@ -9,8 +9,9 @@ import flash.events.IEventDispatcher;
 import flash.events.IOErrorEvent;
 import flash.events.ProgressEvent;
 import flash.net.URLRequest;
+import flash.utils.getTimer;
 
-import net.manaca.loaderqueue.LoaderQueueConst;
+import net.manaca.loaderqueue.LoaderAdapterState;
 import net.manaca.loaderqueue.LoaderQueueEvent;
 
 /**
@@ -100,29 +101,29 @@ public class AbstractLoaderAdapter extends EventDispatcher
     }
 
     /**
-     * A boolean indicating if the instace has started and has not finished loading.
+     * 指示该加载对象是(true)否(false)开始加载。
      * @return
      *
      */
     public function get isStarted():Boolean
     {
-        return state == LoaderQueueConst.STATE_STARTED;
+        return state == LoaderAdapterState.STARTED;
     }
 
     /**
-     * A boolean indicating if the instace has finished.
+     * 指示该加载对象是(true)否(false)完成加载。
      * @return
      *
      */
     public function get isCompleted():Boolean
     {
-        return state == LoaderQueueConst.STATE_COMPLETED;
+        return state == LoaderAdapterState.COMPLETED;
     }
 
     protected var _priority:uint;
 
     /**
-     * The priority level of the loader queue.
+     * 加载优先级。
      * @return
      *
      */
@@ -131,10 +132,10 @@ public class AbstractLoaderAdapter extends EventDispatcher
         return _priority;
     }
 
-    protected var _state:String;
+    protected var _state:String = LoaderAdapterState.WAITING;
 
     /**
-     * 适配器的状态
+     * 适配器的状态。
      * @return 可能的值为LoaderQueueConst中的常量
      * @see net.manaca.loaderqueue#LoaderQueueConst
      */
@@ -165,7 +166,7 @@ public class AbstractLoaderAdapter extends EventDispatcher
 
     private var _url:String;
     /**
-     * The URL to be requested.
+     * 加载对象的url地址。
      * @return 
      * 
      */
@@ -173,7 +174,24 @@ public class AbstractLoaderAdapter extends EventDispatcher
     {
         return _url;
     }
-
+    
+    private var _preventCache:Boolean = false;
+    /**
+     * 为url地址添加一个随机数，用于清除缓存。
+     * 也可以通过设置ILoaderQueue.preventAllCache = true来清除所有加载项的缓存。
+     * @see net.manaca.loaderqueue.ILoaderQueue#preventAllCache
+     * @return 
+     * 
+     */  
+    public function get preventCache():Boolean
+    {
+        return _preventCache;
+    }
+    
+    public function set preventCache(value:Boolean):void
+    {
+        _preventCache = value;
+    }
     //==========================================================================
     //  Methods
     //==========================================================================
@@ -190,12 +208,41 @@ public class AbstractLoaderAdapter extends EventDispatcher
         loaderContext = null;
         urlRequest = null;
     }
+    
+    /**
+     * 为指定url地址添加一个随机参数用于清空缓存。
+     * @param url
+     * @return 
+     * 
+     */    
+    protected function getPreventCacheURL(url:String):String
+    {
+        var result:String = url;
+        var cacheString:String = "LoaderQueueNoCache=" + new Date().getTime();
+        if(result.indexOf("LoaderQueueNoCache=") == -1)
+        {
+            if(result.indexOf("?") != -1)
+            {
+                result += "&" + cacheString;
+            }
+            else
+            {
+                result += "?" + cacheString;
+            }
+        }
+        return result;
+    }
 
     /**
      * 此方法应包含在子类start()函数中调用
      */
     protected function preStartHandle():void
     {
+        state = LoaderAdapterState.STARTED;
+        if(preventCache)
+        {
+            urlRequest.url = getPreventCacheURL(urlRequest.url);
+        }
         with (adapteeAgent)
         {
             //containerAgent的事件
@@ -218,11 +265,12 @@ public class AbstractLoaderAdapter extends EventDispatcher
      */
     protected function preStopHandle():void
     {
+        state = LoaderAdapterState.WAITING;
         removeAllListener();
         dispatchEvent(new LoaderQueueEvent(LoaderQueueEvent.TASK_STOP,
                                            customData));
     }
-
+    
     private function removeAllListener():void
     {
         with (adapteeAgent)
@@ -249,14 +297,14 @@ public class AbstractLoaderAdapter extends EventDispatcher
      */
     protected function container_completeHandler(event:Event):void
     {
-        state = LoaderQueueConst.STATE_COMPLETED;
+        state = LoaderAdapterState.COMPLETED;
         dispatchEvent(new LoaderQueueEvent(LoaderQueueEvent.TASK_COMPLETED,
                                            customData));
     }
 
     protected function container_errorHandler(event:IOErrorEvent):void
     {
-        state = LoaderQueueConst.STATE_ERROR;
+        state = LoaderAdapterState.ERROR;
         var errorEvent:LoaderQueueEvent =
             new LoaderQueueEvent(LoaderQueueEvent.TASK_ERROR, customData);
         errorEvent.errorMsg = event.text;
