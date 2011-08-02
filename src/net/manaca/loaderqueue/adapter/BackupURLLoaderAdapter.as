@@ -90,7 +90,7 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
      * @return 
      * 
      */    
-    public function get date():*
+    public function get data():*
     {
         return adaptee.data;
     }

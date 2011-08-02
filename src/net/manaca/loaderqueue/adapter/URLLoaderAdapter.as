@@ -77,7 +77,7 @@ public class URLLoaderAdapter extends AbstractLoaderAdapter
      * @return 
      * 
      */    
-    public function get date():*
+    public function get data():*
     {
         return adaptee.data;
     }
