@@ -31,21 +31,31 @@ public class URLLoaderAdapter extends AbstractLoaderAdapter
                                      urlRequest:URLRequest)
     {
         super(priority, urlRequest, null);
-        _adaptee = new URLLoader();
-        adapteeAgent = _adaptee;
     }
 
     //==========================================================================
     //  Properties
     //==========================================================================
+    //----------------------------------
+    //  bytesLoaded
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesLoaded():Number
     {
-        return adaptee.bytesLoaded;
+        return adaptee ? adaptee.bytesLoaded : 0;
     }
-
+    
+    //----------------------------------
+    //  bytesTotal
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesTotal():Number
     {
-        return adaptee.bytesTotal;
+        return adaptee ? adaptee.bytesTotal : 0;
     }
     
     //----------------------------------
@@ -53,8 +63,10 @@ public class URLLoaderAdapter extends AbstractLoaderAdapter
     //----------------------------------
     private var _adaptee:URLLoader;
     /**
-     * @private
-     */
+     * 返回加载对象具体实例。
+     * @return 
+     * 
+     */  
     public function get adaptee():URLLoader
     {
         return _adaptee;
@@ -85,8 +97,13 @@ public class URLLoaderAdapter extends AbstractLoaderAdapter
         _adaptee = null;
     }
 
-    public function start():void
+    /**
+     * @inheritDoc
+     */ 
+    override public function start():void
     {
+        _adaptee = new URLLoader();
+        adapteeAgent = _adaptee;
         preStartHandle();
         try
         {
@@ -99,6 +116,9 @@ public class URLLoaderAdapter extends AbstractLoaderAdapter
         }
     }
 
+    /**
+     * @inheritDoc
+     */ 
     public function stop():void
     {
         preStopHandle();

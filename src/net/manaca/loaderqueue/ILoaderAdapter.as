@@ -7,8 +7,6 @@ import flash.events.IEventDispatcher;
 
 /**
  * 适配器接口类,所有任务适配器需引用此接口。
- * @see LoaderAdapter
- * @see CommandAdapter
  * @author Austin
  * @update sean
  */
@@ -64,7 +62,24 @@ public interface ILoaderAdapter extends IEventDispatcher
      * 
      */    
     function get customData():*;
-    function set customData(obj:*):void;
+    function set customData(value:*):void;
+    
+    /**
+     * 加载失败重试次数。
+     * @default 3
+     * @return 
+     * 
+     */    
+    function get maxTries():int;
+    function set maxTries(value:int):void;
+    
+    
+    /**
+     * 加载失败当前重试次数。
+     * @return 
+     * 
+     */    
+    function get numTries():int;
     
     /**
      * 加载URL地址。

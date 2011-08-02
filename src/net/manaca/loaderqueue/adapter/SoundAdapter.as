@@ -3,14 +3,12 @@
  */
 package net.manaca.loaderqueue.adapter
 {
-import net.manaca.loaderqueue.ILoaderAdapter;
-import net.manaca.loaderqueue.LoaderQueueEvent;
-
-import flash.events.Event;
-import flash.media.ID3Info;
 import flash.media.Sound;
 import flash.media.SoundLoaderContext;
 import flash.net.URLRequest;
+
+import net.manaca.loaderqueue.ILoaderAdapter;
+import net.manaca.loaderqueue.LoaderQueueEvent;
 
 /**
  * 将Sound类包装成可用于LoaderQueue的适配器
@@ -33,31 +31,42 @@ public class SoundAdapter extends AbstractLoaderAdapter
                                  loaderContext:SoundLoaderContext = null)
     {
         super(priority, urlRequest, loaderContext);
-        _adaptee = new Sound();
-        _adaptee.addEventListener(Event.ID3, onID3Event);
-        adapteeAgent = _adaptee;
     }
 
     //==========================================================================
     //  Properties
     //==========================================================================
-    
-
+    //----------------------------------
+    //  bytesLoaded
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesLoaded():Number
     {
-        return adaptee.bytesLoaded;
+        return adaptee ? adaptee.bytesLoaded : 0;
     }
-
+    
+    //----------------------------------
+    //  bytesTotal
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesTotal():Number
     {
-        return adaptee.bytesTotal;
+        return adaptee ? adaptee.bytesTotal : 0;
     }
     
     //----------------------------------
     //  adaptee
     //----------------------------------
     private var _adaptee:Sound;
-    
+    /**
+     * 返回加载对象具体实例。
+     * @return 
+     * 
+     */  
     public function get adaptee():Sound
     {
         return _adaptee;
@@ -78,8 +87,13 @@ public class SoundAdapter extends AbstractLoaderAdapter
         _adaptee = null;
     }
 
-    public function start():void
+    /**
+     * @inheritDoc
+     */ 
+    override public function start():void
     {
+        _adaptee = new Sound();
+        adapteeAgent = _adaptee;
         preStartHandle();
         try
         {
@@ -88,10 +102,13 @@ public class SoundAdapter extends AbstractLoaderAdapter
         catch (error:Error)
         {
             dispatchEvent(
-                new LoaderQueueEvent(LoaderQueueEvent.TASK_ERROR,customData));
+                new LoaderQueueEvent(LoaderQueueEvent.TASK_ERROR, customData));
         }
     }
 
+    /**
+     * @inheritDoc
+     */ 
     public function stop():void
     {
         preStopHandle();
@@ -103,14 +120,6 @@ public class SoundAdapter extends AbstractLoaderAdapter
         {
         }
 
-    }
-
-    //==========================================================================
-    //  Event Handlers
-    //==========================================================================
-    private function onID3Event(event:Event):void
-    {
-        var obj:ID3Info = event.currentTarget["id3"] as ID3Info;
     }
 }
 }

@@ -22,22 +22,31 @@ public class URLStreamAdapter extends AbstractLoaderAdapter implements ILoaderAd
                                      urlRequest:URLRequest)
     {
         super(priority, urlRequest);
-
-        _adaptee = new URLStream();
-        adapteeAgent = _adaptee;
     }
 
 
     //==========================================================================
     //  Properties
     //==========================================================================
+    //----------------------------------
+    //  bytesLoaded
+    //----------------------------------
     private var _bytesLoaded:Number = 0;
+    /**
+     * @inheritDoc
+     */  
     public function get bytesLoaded():Number
     {
         return _bytesLoaded;
     }
 
+    //----------------------------------
+    //  bytesTotal
+    //----------------------------------
     private var _bytesTotal:Number = 0;
+    /**
+     * @inheritDoc
+     */
     public function get bytesTotal():Number
     {
         return _bytesTotal;
@@ -47,7 +56,11 @@ public class URLStreamAdapter extends AbstractLoaderAdapter implements ILoaderAd
     //  adaptee
     //----------------------------------
     private var _adaptee:URLStream;
-
+    /**
+     * 返回加载对象具体实例。
+     * @return 
+     * 
+     */    
     public function get adaptee():URLStream
     {
         return _adaptee;
@@ -56,7 +69,6 @@ public class URLStreamAdapter extends AbstractLoaderAdapter implements ILoaderAd
     //==========================================================================
     //  Methods
     //==========================================================================
-
     /**
      * 消毁此项目内在引用
      * 调用此方法后，此adapter实例会自动从LoaderQueue中移出
@@ -69,8 +81,13 @@ public class URLStreamAdapter extends AbstractLoaderAdapter implements ILoaderAd
         _adaptee = null;
     }
 
-    public function start():void
+    /**
+     * @inheritDoc
+     */ 
+    override public function start():void
     {
+        _adaptee = new URLStream();
+        adapteeAgent = _adaptee;
         preStartHandle();
         try
         {
@@ -83,6 +100,9 @@ public class URLStreamAdapter extends AbstractLoaderAdapter implements ILoaderAd
         }
     }
 
+    /**
+     * @inheritDoc
+     */ 
     public function stop():void
     {
         preStopHandle();

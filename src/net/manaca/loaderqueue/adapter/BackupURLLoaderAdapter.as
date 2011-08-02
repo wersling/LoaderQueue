@@ -35,8 +35,6 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
                                            backupUrlRequest:URLRequest)
     {
         super(priority, urlRequest, null);
-        _adaptee = new URLLoader();
-        adapteeAgent = _adaptee;
         
         this.backupUrlRequest = backupUrlRequest;
     }
@@ -48,25 +46,45 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
     //==========================================================================
     //  Properties
     //==========================================================================
+    //----------------------------------
+    //  bytesLoaded
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesLoaded():Number
     {
-        return adaptee.bytesLoaded;
+        return adaptee ? adaptee.bytesLoaded : 0;
     }
     
+    //----------------------------------
+    //  bytesTotal
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesTotal():Number
     {
-        return adaptee.bytesTotal;
+        return adaptee ? adaptee.bytesTotal : 0;
     }
     
+    //----------------------------------
+    //  adaptee
+    //----------------------------------
     private var _adaptee:URLLoader;
     /**
-     * @private
-     */
+     * 返回加载对象具体实例。
+     * @return 
+     * 
+     */ 
     public function get adaptee():URLLoader
     {
         return _adaptee;
     }
     
+    //----------------------------------
+    //  date
+    //----------------------------------
     /**
      * The data received from the load operation.
      * @return 
@@ -95,8 +113,10 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
     /**
      * @inheritDoc 
      */
-    public function start():void
+    override public function start():void
     {
+        _adaptee = new URLLoader();
+        adapteeAgent = _adaptee;
         preStartHandle();
         try
         {
@@ -121,6 +141,9 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
         }
     }
     
+    /**
+     * @inheritDoc
+     */ 
     public function stop():void
     {
         preStopHandle();
@@ -141,10 +164,9 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
     {
         if(!isUseBackup)
         {
-            stop();
+            event.stopPropagation();
+            removeAllListener();
             isUseBackup = true;
-            _adaptee = new URLLoader();
-            adapteeAgent = _adaptee;
             start();
         }
         else

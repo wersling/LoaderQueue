@@ -39,9 +39,6 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
                                         loaderContext:LoaderContext = null)
     {
         super(priority, urlRequest, loaderContext);
-        _adaptee = new Loader();
-        adapteeAgent = _adaptee.contentLoaderInfo;
-        
         this.backupUrlRequest = backupUrlRequest;
     }
     //==========================================================================
@@ -52,31 +49,45 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
     //==========================================================================
     //  Properties
     //==========================================================================
+    //----------------------------------
+    //  bytesLoaded
+    //----------------------------------
     /**
-     * @inheritDoc 
-     */
+     * @inheritDoc
+     */  
     public function get bytesLoaded():Number
     {
-        return adaptee.contentLoaderInfo.bytesLoaded;
+        return adaptee ? adaptee.contentLoaderInfo.bytesLoaded : 0;
     }
     
+    //----------------------------------
+    //  bytesTotal
+    //----------------------------------
     /**
-     * @inheritDoc 
-     */
+     * @inheritDoc
+     */  
     public function get bytesTotal():Number
     {
-        return adaptee.contentLoaderInfo.bytesTotal;
+        return adaptee ? adaptee.contentLoaderInfo.bytesTotal : 0;
     }
     
+    //----------------------------------
+    //  adaptee
+    //----------------------------------
     private var _adaptee:Loader;
     /**
-     * @private
-     */    
+     * 返回加载对象具体实例。
+     * @return 
+     * 
+     */  
     public function get adaptee():Loader
     {
         return _adaptee;
     }
     
+    //----------------------------------
+    //  context
+    //----------------------------------
     /**
      * Contains the root display object of the SWF file or image 
      * (JPG, PNG, or GIF) file that was loaded.
@@ -105,8 +116,13 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
         _adaptee = null;
     }
     
-    public function start():void
+    /**
+     * @inheritDoc
+     */ 
+    override public function start():void
     {
+        _adaptee = new Loader();
+        adapteeAgent = _adaptee.contentLoaderInfo;
         preStartHandle();
         try
         {
@@ -131,6 +147,9 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
         }
     }
     
+    /**
+     * @inheritDoc
+     */ 
     public function stop():void
     {
         preStopHandle();
@@ -151,10 +170,9 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
     {
         if(!isUseBackup)
         {
-            stop();
+            event.stopPropagation();
+            removeAllListener();
             isUseBackup = true;
-            _adaptee = new Loader();
-            adapteeAgent = _adaptee.contentLoaderInfo;
             start();
         }
         else

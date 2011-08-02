@@ -34,27 +34,44 @@ public class LoaderAdapter extends AbstractLoaderAdapter
                                   loaderContext:LoaderContext = null)
     {
         super(priority, urlRequest, loaderContext);
-        _adaptee = new Loader();
-        adapteeAgent = _adaptee.contentLoaderInfo;
     }
-    private var _adaptee:Loader;
+    
+    
 
     //==========================================================================
     //  Properties
     //==========================================================================
+    //----------------------------------
+    //  bytesLoaded
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesLoaded():Number
     {
-        return adaptee.contentLoaderInfo.bytesLoaded;
+        return adaptee ? adaptee.contentLoaderInfo.bytesLoaded : 0;
     }
 
+    //----------------------------------
+    //  bytesTotal
+    //----------------------------------
+    /**
+     * @inheritDoc
+     */  
     public function get bytesTotal():Number
     {
-        return adaptee.contentLoaderInfo.bytesTotal;
+        return adaptee ? adaptee.contentLoaderInfo.bytesTotal : 0;
     }
 
+    //----------------------------------
+    //  adaptee
+    //----------------------------------
+    private var _adaptee:Loader;
     /**
-     * @private
-     */
+     * 返回加载对象具体实例。
+     * @return 
+     * 
+     */  
     public function get adaptee():Loader
     {
         return _adaptee;
@@ -87,8 +104,13 @@ public class LoaderAdapter extends AbstractLoaderAdapter
         _adaptee = null;
     }
 
-    public function start():void
+    /**
+     * @inheritDoc
+     */ 
+    override public function start():void
     {
+        _adaptee = new Loader();
+        adapteeAgent = _adaptee.contentLoaderInfo;
         preStartHandle();
         try
         {
@@ -101,6 +123,9 @@ public class LoaderAdapter extends AbstractLoaderAdapter
         }
     }
 
+    /**
+     * @inheritDoc
+     */ 
     public function stop():void
     {
         preStopHandle();

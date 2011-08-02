@@ -3,6 +3,7 @@
  */
 package net.manaca.loaderqueue.adapter
 {
+import flash.events.ErrorEvent;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
@@ -80,10 +81,12 @@ public class AbstractLoaderAdapter extends EventDispatcher
     protected var loaderContext:*;
     protected var urlRequest:URLRequest;
 
-
     //==========================================================================
     //  Properties
     //==========================================================================
+    //----------------------------------
+    //  customData
+    //----------------------------------
     private var _customData:*;
 
     /**
@@ -99,7 +102,38 @@ public class AbstractLoaderAdapter extends EventDispatcher
     {
         _customData = value;
     }
-
+    
+    //----------------------------------
+    //  maxTries
+    //----------------------------------
+    private var _maxTries:int = 3;
+    /**
+     * 加载失败重试次数。
+     * @default 3 
+     * 
+     */    
+    public function get maxTries():int
+    {
+        return _maxTries;
+    }
+    
+    public function set maxTries(value:int):void
+    {
+        _maxTries = value;
+    }
+    
+    //----------------------------------
+    //  numTries
+    //----------------------------------
+    private var _numTries:int = 0;
+    public function get numTries():int
+    {
+        return _numTries;
+    }
+    
+    //----------------------------------
+    //  isStarted
+    //----------------------------------
     /**
      * 指示该加载对象是(true)否(false)开始加载。
      * @return
@@ -109,7 +143,10 @@ public class AbstractLoaderAdapter extends EventDispatcher
     {
         return state == LoaderAdapterState.STARTED;
     }
-
+    
+    //----------------------------------
+    //  isCompleted
+    //----------------------------------
     /**
      * 指示该加载对象是(true)否(false)完成加载。
      * @return
@@ -119,8 +156,11 @@ public class AbstractLoaderAdapter extends EventDispatcher
     {
         return state == LoaderAdapterState.COMPLETED;
     }
-
-    protected var _priority:uint;
+    
+    //----------------------------------
+    //  priority
+    //----------------------------------
+    private var _priority:uint;
 
     /**
      * 加载优先级。
@@ -132,7 +172,10 @@ public class AbstractLoaderAdapter extends EventDispatcher
         return _priority;
     }
 
-    protected var _state:String = LoaderAdapterState.WAITING;
+    //----------------------------------
+    //  state
+    //----------------------------------
+    private var _state:String = LoaderAdapterState.WAITING;
 
     /**
      * 适配器的状态。
@@ -149,6 +192,9 @@ public class AbstractLoaderAdapter extends EventDispatcher
         _state = value;
     }
     
+    //----------------------------------
+    //  adapteeAgent
+    //----------------------------------
     private var _adapteeAgent:IEventDispatcher;
 
     /**
@@ -164,6 +210,9 @@ public class AbstractLoaderAdapter extends EventDispatcher
         return _adapteeAgent;
     }
 
+    //----------------------------------
+    //  url
+    //----------------------------------
     private var _url:String;
     /**
      * 加载对象的url地址。
@@ -175,6 +224,9 @@ public class AbstractLoaderAdapter extends EventDispatcher
         return _url;
     }
     
+    //----------------------------------
+    //  preventCache
+    //----------------------------------
     private var _preventCache:Boolean = false;
     /**
      * 为url地址添加一个随机数，用于清除缓存。
@@ -195,6 +247,16 @@ public class AbstractLoaderAdapter extends EventDispatcher
     //==========================================================================
     //  Methods
     //==========================================================================
+    /**
+     * @private
+     * 
+     */    
+    public function start():void
+    {
+        throw new Error("AbstractLoaderAdapter.start() method is abstract " +
+            "and must be implemented by subclasses.");
+    }
+    
     /**
      * 消毁此项目内在引用
      * 调用此方法后，此adapter实例会自动从LoaderQueue中移出
@@ -271,7 +333,7 @@ public class AbstractLoaderAdapter extends EventDispatcher
                                            customData));
     }
     
-    private function removeAllListener():void
+    protected function removeAllListener():void
     {
         with (adapteeAgent)
         {
@@ -286,6 +348,12 @@ public class AbstractLoaderAdapter extends EventDispatcher
         removeEventListener(IOErrorEvent.DISK_ERROR, container_errorHandler);
         removeEventListener(IOErrorEvent.IO_ERROR, container_errorHandler);
         removeEventListener(IOErrorEvent.NETWORK_ERROR, container_errorHandler);
+    }
+
+    protected function createErrorEvent(error:Error):ErrorEvent
+    {
+        return new ErrorEvent(
+            LoaderQueueEvent.TASK_ERROR, false, false, error.message);
     }
 
     //==========================================================================
@@ -304,11 +372,23 @@ public class AbstractLoaderAdapter extends EventDispatcher
 
     protected function container_errorHandler(event:IOErrorEvent):void
     {
-        state = LoaderAdapterState.ERROR;
-        var errorEvent:LoaderQueueEvent =
-            new LoaderQueueEvent(LoaderQueueEvent.TASK_ERROR, customData);
-        errorEvent.errorMsg = event.text;
-        dispatchEvent(errorEvent);
+        _numTries++;
+        
+        event.stopPropagation();
+        if (numTries < maxTries)
+        {
+            removeAllListener();
+            state = LoaderAdapterState.WAITING;
+            start();
+        }
+        else
+        {
+            state = LoaderAdapterState.ERROR;
+            var errorEvent:LoaderQueueEvent =
+                new LoaderQueueEvent(LoaderQueueEvent.TASK_ERROR, customData);
+            errorEvent.errorMsg = event.text;
+            dispatchEvent(errorEvent);
+        }
     }
 
     /**
