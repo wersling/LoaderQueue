@@ -63,7 +63,7 @@ public class LoaderQueueEvent extends Event
     //  Constructor
     //==========================================================================
     /**
-     * Constructs a new <code>LoaderQueueEvent</code> instance.
+     * 构造函数.
      *
      */
     public function LoaderQueueEvent(type:String, customData:* = null)

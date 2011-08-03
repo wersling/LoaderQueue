@@ -27,7 +27,7 @@ internal class InspectorItem extends Sprite
     //  Constructor
     //==========================================================================
     /**
-     * Constructs a new <code>InspectorItem</code> instance.
+     * 构造函数.
      * 
      */
     public function InspectorItem(loaderAdapter:ILoaderAdapter)
@@ -266,12 +266,14 @@ internal class InspectorItem extends Sprite
         dispatchEvent(new Event(Event.CHANGE));
     }
     
-    private function loaderAdapter_taskProgressHandler(event:LoaderQueueEvent):void
+    private function loaderAdapter_taskProgressHandler(
+        event:LoaderQueueEvent):void
     {
         updateProgress();
     }
     
-    private function loaderAdapter_taskCompletedHandler(event:LoaderQueueEvent):void
+    private function loaderAdapter_taskCompletedHandler(
+        event:LoaderQueueEvent):void
     {
         updateProgress();
         dispatchEvent(new Event(Event.CHANGE));

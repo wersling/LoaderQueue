@@ -30,7 +30,7 @@ public class LoaderInspector extends Sprite
     //  Constructor
     //==========================================================================
     /**
-     * Constructs a new <code>LoaderInspector</code> instance.
+     * 构造函数.
      * @param loaderQueue 需要监视的加载队列.
      * 
      */    

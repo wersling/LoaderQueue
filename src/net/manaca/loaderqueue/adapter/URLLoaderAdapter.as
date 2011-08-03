@@ -23,7 +23,7 @@ public class URLLoaderAdapter extends AbstractLoaderAdapter
     //  Constructor
     //==========================================================================
     /**
-     * URLLoader适配器
+     * 构造函数.
      * @param priority 等级值,数值越小等级越高,越早被下载
      * @param urlRequest 需下载项的url地址
      */

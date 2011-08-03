@@ -18,6 +18,12 @@ import net.manaca.loaderqueue.LoaderQueueEvent;
  */
 public class URLStreamAdapter extends AbstractLoaderAdapter implements ILoaderAdapter
 {
+    /**
+     * 构造函数.
+     * @param priority 等级值,数值越小等级越高,越早被下载
+     * @param urlRequest 需下载项的url地址
+     * 
+     */    
     public function URLStreamAdapter(priority:uint,
                                      urlRequest:URLRequest)
     {

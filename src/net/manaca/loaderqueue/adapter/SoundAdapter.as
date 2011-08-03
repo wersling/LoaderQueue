@@ -23,7 +23,7 @@ public class SoundAdapter extends AbstractLoaderAdapter
     //  Constructor
     //==========================================================================
     /**
-     * Constructs a new <code>SoundAdapter</code> instance.
+     * 构造函数.
      *
      */
     public function SoundAdapter(priority:uint,

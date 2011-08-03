@@ -16,8 +16,9 @@ import flash.utils.Timer;
     type="net.manaca.loaderqueue.LoaderQueueEvent")]
 
 /**
- * 任务队列及下载队列的管理器
- * @example
+ * 任务队列及下载队列的管理器. 
+ * 使用范例：
+ * <listing version = "3.0" >
  * var urlLoader:URLLoaderAdapter =
  *                           new URLLoaderAdapter(4,"http://ggg.ggg.com/a.swf");
  * urlLoader.addEventListener(LoaderQueueEvent.TASK_COMPLETED,
@@ -26,7 +27,7 @@ import flash.utils.Timer;
  * loaderQueue.addItem(urlLoader);
  *
  * @see net.manaca.loaderqueue.adapter#URLLoaderAdapter
- *
+ * </listing>
  * @author Austin
  * @update sean
  */
@@ -36,7 +37,7 @@ public class LoaderQueue extends EventDispatcher implements ILoaderQueue
     //  Constructor
     //==========================================================================
     /**
-     * Constructs a new <code>LoaderQueue</code> instance.
+     * 构造函数.
      * @param threadLimit 下载线程数的上限。默认2
      * @param delay 下载队列排序延迟时间，单位毫秒。默认500毫秒
      * @param jumpQueueIfCached 如果该url文件已经加载过，是否跳过队列直接加载。

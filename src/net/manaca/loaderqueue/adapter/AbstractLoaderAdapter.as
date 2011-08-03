@@ -63,7 +63,7 @@ public class AbstractLoaderAdapter extends EventDispatcher
     //  Constructor
     //==========================================================================
     /**
-     * Constructs a new <code>AbstractLoaderAdapter</code> instance.
+     * 构造函数.
      *
      */
     public function AbstractLoaderAdapter(priority:uint, urlRequest:URLRequest,
@@ -312,7 +312,8 @@ public class AbstractLoaderAdapter extends EventDispatcher
             addEventListener(ProgressEvent.PROGRESS, container_progressHandler);
             addEventListener(IOErrorEvent.DISK_ERROR, container_errorHandler);
             addEventListener(IOErrorEvent.IO_ERROR, container_errorHandler);
-            addEventListener(IOErrorEvent.NETWORK_ERROR, container_errorHandler);
+            addEventListener(IOErrorEvent.NETWORK_ERROR, 
+                container_errorHandler);
         }
         //adapter自身的事件
         addEventListener(IOErrorEvent.DISK_ERROR, container_errorHandler);
@@ -340,7 +341,8 @@ public class AbstractLoaderAdapter extends EventDispatcher
             removeEventListener(Event.COMPLETE, container_completeHandler);
             removeEventListener(ProgressEvent.PROGRESS,
                                 container_progressHandler);
-            removeEventListener(IOErrorEvent.DISK_ERROR, container_errorHandler);
+            removeEventListener(IOErrorEvent.DISK_ERROR, 
+                container_errorHandler);
             removeEventListener(IOErrorEvent.IO_ERROR, container_errorHandler);
             removeEventListener(IOErrorEvent.NETWORK_ERROR,
                                 container_errorHandler);

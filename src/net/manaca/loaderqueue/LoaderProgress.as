@@ -27,7 +27,7 @@ public class LoaderProgress extends EventDispatcher
     //  Constructor
     //==========================================================================
     /**
-     * Constructs a new <code>LoaderProgress</code> instance.
+     * 构造函数.
      * 
      */
     public function LoaderProgress()

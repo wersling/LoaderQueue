@@ -28,7 +28,7 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
     //  Constructor
     //==========================================================================
     /**
-     * BackupLoaderAdapter
+     * 构造函数.
      * @param priority 优先级,数值越小等级越高,越早被下载
      * @param urlRequest 需下载项的url地址
      * @param backupUrlRequest 备份的url地址
