@@ -37,7 +37,7 @@ public class LoaderProgress extends EventDispatcher
     //  Variables
     //==========================================================================
     private var items:Array = [];
-    private var isStart:Boolean = false;
+    private var isStarted:Boolean = false;
     private var updateInterval:int;
     //==========================================================================
     //  Properties
@@ -66,7 +66,7 @@ public class LoaderProgress extends EventDispatcher
         {
             items.push(loaderAdapter);
             
-            if(isStart)
+            if(isStarted)
             {
                 update();
             }
@@ -84,7 +84,7 @@ public class LoaderProgress extends EventDispatcher
         if(index != -1)
         {
             items.splice(index, 1);
-            if(isStart)
+            if(isStarted)
             {
                 update();
             }
@@ -98,7 +98,7 @@ public class LoaderProgress extends EventDispatcher
     public function start():void
     {
         updateInterval = setInterval(update, 100);
-        isStart = true;
+        isStarted = true;
     }
     
     /**
@@ -108,7 +108,7 @@ public class LoaderProgress extends EventDispatcher
     public function stop():void
     {
         clearInterval(updateInterval);
-        isStart = false;
+        isStarted = false;
     }
     
     /**
