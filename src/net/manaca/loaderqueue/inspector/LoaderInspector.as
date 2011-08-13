@@ -280,6 +280,24 @@ public class LoaderInspector extends Sprite
             removeEvents();
             clearAllTask();
         }
+        if(container)
+        {
+            scrollPane.content.removeChild(container);
+            container = null;
+        }
+        
+        if(scrollPane)
+        {
+            scrollPane = null;
+        }
+        
+        if(onlyButton)
+        {
+            removeChild(onlyButton);
+            onlyButton = null;
+        }
+        
+        parentContainer = null;
     }
     
     /**
