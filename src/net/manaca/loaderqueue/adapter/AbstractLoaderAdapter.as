@@ -307,7 +307,6 @@ public class AbstractLoaderAdapter extends EventDispatcher
         }
         with (adapteeAgent)
         {
-            //containerAgent的事件
             addEventListener(Event.COMPLETE, container_completeHandler);
             addEventListener(ProgressEvent.PROGRESS, container_progressHandler);
             addEventListener(IOErrorEvent.DISK_ERROR, container_errorHandler);
@@ -315,10 +314,6 @@ public class AbstractLoaderAdapter extends EventDispatcher
             addEventListener(IOErrorEvent.NETWORK_ERROR, 
                 container_errorHandler);
         }
-        //adapter自身的事件
-        addEventListener(IOErrorEvent.DISK_ERROR, container_errorHandler);
-        addEventListener(IOErrorEvent.IO_ERROR, container_errorHandler);
-        addEventListener(IOErrorEvent.NETWORK_ERROR, container_errorHandler);
         dispatchEvent(new LoaderQueueEvent(LoaderQueueEvent.TASK_START,
                                            customData));
     }
@@ -336,20 +331,21 @@ public class AbstractLoaderAdapter extends EventDispatcher
     
     protected function removeAllListener():void
     {
-        with (adapteeAgent)
+        if(adapteeAgent)
         {
-            removeEventListener(Event.COMPLETE, container_completeHandler);
-            removeEventListener(ProgressEvent.PROGRESS,
-                                container_progressHandler);
-            removeEventListener(IOErrorEvent.DISK_ERROR, 
-                container_errorHandler);
-            removeEventListener(IOErrorEvent.IO_ERROR, container_errorHandler);
-            removeEventListener(IOErrorEvent.NETWORK_ERROR,
-                                container_errorHandler);
+            with (adapteeAgent)
+            {
+                removeEventListener(Event.COMPLETE, container_completeHandler);
+                removeEventListener(ProgressEvent.PROGRESS,
+                                    container_progressHandler);
+                removeEventListener(IOErrorEvent.DISK_ERROR, 
+                    container_errorHandler);
+                removeEventListener(IOErrorEvent.IO_ERROR, 
+                    container_errorHandler);
+                removeEventListener(IOErrorEvent.NETWORK_ERROR,
+                                    container_errorHandler);
+            }
         }
-        removeEventListener(IOErrorEvent.DISK_ERROR, container_errorHandler);
-        removeEventListener(IOErrorEvent.IO_ERROR, container_errorHandler);
-        removeEventListener(IOErrorEvent.NETWORK_ERROR, container_errorHandler);
     }
 
     protected function createErrorEvent(error:Error):ErrorEvent
