@@ -166,9 +166,6 @@ public class LoaderInspector extends Sprite
      */    
     private function initDisplay():void
     {
-        addEventListener(Event.ADDED_TO_STAGE,
-            addedToStageHandler);
-        
         var titleLabel:TextField = new TextField();
         titleLabel.autoSize = TextFieldAutoSize.LEFT;
         titleLabel.selectable = false;
@@ -186,6 +183,9 @@ public class LoaderInspector extends Sprite
         scrollPane = new ScrollPane(this, 5, 25);
         scrollPane.content.addChild(container);
         scrollPane.autoHideScrollBar = true;
+        
+        addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+        
     }
     
     /**
