@@ -124,6 +124,9 @@ public class URLStreamAdapter extends AbstractLoaderAdapter implements ILoaderAd
     //==========================================================================
     //  Event Handlers
     //==========================================================================
+    /**
+     * @inheritDoc
+     */ 
     override protected function container_progressHandler(
         event:ProgressEvent):void
     {

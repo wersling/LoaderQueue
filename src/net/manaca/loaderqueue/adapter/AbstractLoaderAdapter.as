@@ -249,7 +249,6 @@ public class AbstractLoaderAdapter extends EventDispatcher
     //==========================================================================
     /**
      * @private
-     * 
      */    
     public function start():void
     {
@@ -258,7 +257,7 @@ public class AbstractLoaderAdapter extends EventDispatcher
     }
     
     /**
-     * 消毁此项目内在引用
+     * 消毁此对象内在引用
      * 调用此方法后，此adapter实例会自动从LoaderQueue中移出
      * p.s: 停止下载的操作LoaderQueue会自动处理
      */
@@ -273,7 +272,9 @@ public class AbstractLoaderAdapter extends EventDispatcher
     
     /**
      * 为指定url地址添加一个随机参数用于清空缓存。
-     * @param url
+     * <p>例如添加前为:http://www.mysize.com/file.xml</p>
+     * <p>添加后则为:http://www.mysize.com/file.xml?LoaderQueueNoCache=1736444222</p>
+     * @param url 需要添加清除缓存信息的url
      * @return 
      * 
      */    
@@ -301,6 +302,7 @@ public class AbstractLoaderAdapter extends EventDispatcher
     protected function preStartHandle():void
     {
         state = LoaderAdapterState.STARTED;
+        //判断是否需要添加清除缓存参数
         if(preventCache)
         {
             urlRequest.url = getPreventCacheURL(urlRequest.url);
@@ -329,22 +331,24 @@ public class AbstractLoaderAdapter extends EventDispatcher
                                            customData));
     }
     
+    /**
+     * 移除所有被适配者对象的事件侦听.
+     * 
+     */    
     protected function removeAllListener():void
     {
         if(adapteeAgent)
         {
-            with (adapteeAgent)
-            {
-                removeEventListener(Event.COMPLETE, container_completeHandler);
-                removeEventListener(ProgressEvent.PROGRESS,
-                                    container_progressHandler);
-                removeEventListener(IOErrorEvent.DISK_ERROR, 
-                    container_errorHandler);
-                removeEventListener(IOErrorEvent.IO_ERROR, 
-                    container_errorHandler);
-                removeEventListener(IOErrorEvent.NETWORK_ERROR,
-                                    container_errorHandler);
-            }
+            adapteeAgent.removeEventListener(Event.COMPLETE, 
+                container_completeHandler);
+            adapteeAgent.removeEventListener(ProgressEvent.PROGRESS,
+                container_progressHandler);
+            adapteeAgent.removeEventListener(IOErrorEvent.DISK_ERROR, 
+                container_errorHandler);
+            adapteeAgent.removeEventListener(IOErrorEvent.IO_ERROR, 
+                container_errorHandler);
+            adapteeAgent.removeEventListener(IOErrorEvent.NETWORK_ERROR,
+                container_errorHandler);
         }
     }
 
@@ -368,11 +372,17 @@ public class AbstractLoaderAdapter extends EventDispatcher
                                            customData));
     }
 
+    /**
+     * 加载出现IOError时的处理
+     * @param event
+     * 
+     */    
     protected function container_errorHandler(event:IOErrorEvent):void
     {
         _numTries++;
-        
+        //停止冒泡
         event.stopPropagation();
+        //判断重试次数
         if (numTries < maxTries)
         {
             removeAllListener();

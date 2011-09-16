@@ -45,7 +45,7 @@ public class LoaderAdapterTest
     {
         Assert.assertEquals(loaderAdapter1.state, LoaderAdapterState.COMPLETED);
         Assert.assertEquals(loaderAdapter1.isCompleted, true);
-        Assert.assertTrue(LoaderAdapter(loaderAdapter1).context != null);
+        Assert.assertTrue(LoaderAdapter(loaderAdapter1).content != null);
     }
 }
 }

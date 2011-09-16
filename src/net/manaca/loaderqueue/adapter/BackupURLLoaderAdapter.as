@@ -99,7 +99,7 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
     //==========================================================================
     
     /**
-     * 消毁此项目内在引用
+     * 消毁此对象内在引用
      * 调用此方法后，此adapter实例会自动从LoaderQueue中移出
      * p.s: 停止下载的操作LoaderQueue会自动处理
      */
@@ -160,8 +160,13 @@ public class BackupURLLoaderAdapter extends AbstractLoaderAdapter
     //==========================================================================
     //  Event Handlers
     //==========================================================================
+    /**
+     * @inheritDoc
+     */ 
     override protected function container_errorHandler(event:IOErrorEvent):void
     {
+        //如果不是采用备用地址，则开始加载备用地址数据.
+        //否则抛出错误事件
         if(!isUseBackup)
         {
             event.stopPropagation();

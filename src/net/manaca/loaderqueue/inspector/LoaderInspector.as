@@ -10,6 +10,7 @@ import flash.events.Event;
 import flash.events.KeyboardEvent;
 import flash.system.Capabilities;
 import flash.text.TextField;
+import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import flash.ui.Keyboard;
 import flash.utils.Dictionary;
@@ -26,6 +27,11 @@ import net.manaca.loaderqueue.LoaderQueueEvent;
  */
 public class LoaderInspector extends Sprite
 {
+    //==========================================================================
+    //  Class variables
+    //==========================================================================
+    static private const TITLE_TXT:String = "LoaderInspector v0.1";
+    
     //==========================================================================
     //  Constructor
     //==========================================================================
@@ -55,6 +61,9 @@ public class LoaderInspector extends Sprite
     //==========================================================================
     //  Properties
     //==========================================================================
+    //----------------------------------
+    //  loaderQueue
+    //----------------------------------
     private var _loaderQueue:ILoaderQueue;
     /**
      * 需要监视的加载队列.
@@ -81,6 +90,9 @@ public class LoaderInspector extends Sprite
         }
     }
     
+    //----------------------------------
+    //  height
+    //----------------------------------
     private var _height:Number = 0;
     /**
      * @private 
@@ -89,12 +101,16 @@ public class LoaderInspector extends Sprite
     {
         return _height;
     }
+    
     override public function set height(value:Number):void
     {
         _height = value;
         layout();
     }
     
+    //----------------------------------
+    //  width
+    //----------------------------------
     private var _width:Number = 0;
     /**
      * @private 
@@ -154,9 +170,9 @@ public class LoaderInspector extends Sprite
             addedToStageHandler);
         
         var titleLabel:TextField = new TextField();
-        titleLabel.autoSize = "left";
+        titleLabel.autoSize = TextFieldAutoSize.LEFT;
         titleLabel.selectable = false;
-        titleLabel.text = "LoaderInspector v0.1";
+        titleLabel.text = TITLE_TXT;
         titleLabel.x = 5;
         titleLabel.y = 3;
         var tf:TextFormat = new TextFormat(Style.fontName, 12, 0x000000, true);
@@ -366,7 +382,7 @@ public class LoaderInspector extends Sprite
         resizeHandler(null);
     }
     
-    private function removeFromStageHandler():void
+    protected function removeFromStageHandler():void
     {
         freeze = true;
         stage.removeEventListener(Event.RESIZE, resizeHandler);

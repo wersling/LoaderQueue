@@ -46,7 +46,7 @@ public class BackupLoaderAdapterTest
     {
         Assert.assertEquals(loaderAdapter1.state, LoaderAdapterState.COMPLETED);
         Assert.assertEquals(loaderAdapter1.isCompleted, true);
-        Assert.assertTrue(BackupLoaderAdapter(loaderAdapter1).context != null);
+        Assert.assertTrue(BackupLoaderAdapter(loaderAdapter1).content != null);
     }
     
     [Test(async)]
@@ -65,7 +65,7 @@ public class BackupLoaderAdapterTest
     {
         Assert.assertEquals(loaderAdapter1.state, LoaderAdapterState.COMPLETED);
         Assert.assertEquals(loaderAdapter1.isCompleted, true);
-        Assert.assertTrue(BackupLoaderAdapter(loaderAdapter1).context != null);
+        Assert.assertTrue(BackupLoaderAdapter(loaderAdapter1).content != null);
     }
 }
 }

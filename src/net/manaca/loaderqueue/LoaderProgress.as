@@ -44,7 +44,7 @@ public class LoaderProgress extends EventDispatcher
     //==========================================================================
     private var _totalProgress:Number;
     /**
-     * 总进度
+     * 总进度 0-1
      * @return 
      * 
      */    

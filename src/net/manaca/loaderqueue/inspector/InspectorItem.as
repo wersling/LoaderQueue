@@ -65,7 +65,7 @@ internal class InspectorItem extends Sprite
     //----------------------------------
     private var _loaderAdapter:ILoaderAdapter;
     /**
-     * 加载对象
+     * 加载对象适配器
      * @return 
      * 
      */    

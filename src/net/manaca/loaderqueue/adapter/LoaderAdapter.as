@@ -83,7 +83,7 @@ public class LoaderAdapter extends AbstractLoaderAdapter
      * @return 
      * 
      */    
-    public function get context():DisplayObject
+    public function get content():DisplayObject
     {
         return adaptee.content;
     }

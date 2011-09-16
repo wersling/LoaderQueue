@@ -94,7 +94,7 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
      * @return 
      * 
      */    
-    public function get context():DisplayObject
+    public function get content():DisplayObject
     {
         return adaptee.content;
     }
@@ -166,8 +166,13 @@ public class BackupLoaderAdapter extends AbstractLoaderAdapter
     //==========================================================================
     //  Event Handlers
     //==========================================================================
+    /**
+     * @inheritDoc
+     */ 
     override protected function container_errorHandler(event:IOErrorEvent):void
     {
+        //如果不是采用备用地址，则开始加载备用地址数据.
+        //否则抛出错误事件
         if(!isUseBackup)
         {
             event.stopPropagation();
